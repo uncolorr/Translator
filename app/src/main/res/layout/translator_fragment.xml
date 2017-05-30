@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayoutTranslator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.uncolor.yandextranslator.TranslatorFragment">
+
+    <EditText
+        android:id="@+id/editTextFrom"
+        android:layout_width="0dp"
+        android:layout_height="130dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/edit_text_style_no_selected"
+        android:gravity="top|left"
+        android:hint="Введите текст сюда"
+        android:inputType="textCapSentences"
+        android:paddingBottom="2dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="40dp"
+        android:paddingTop="8dp"
+        android:scrollbars="vertical"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonDeleteText"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/windowBackground"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextFrom"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="@+id/editTextFrom"
+        app:layout_constraintRight_toRightOf="@+id/editTextFrom"
+        app:layout_constraintTop_toTopOf="@+id/editTextFrom"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/cross" />
+
+    <TextView
+        android:id="@+id/textViewTranslate"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:scrollbars="vertical"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/imageButtonFavorite"
+        app:layout_constraintTop_toBottomOf="@+id/editTextFrom"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/imageButtonFavorite"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/windowBackground"
+        android:scaleType="fitCenter"
+        android:tint="@color/tintColor"
+        app:layout_constraintLeft_toRightOf="@id/textViewTranslate"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextFrom"
+        app:srcCompat="@drawable/favorite" />
+
+    <ImageButton
+        android:id="@+id/imageButtonShare"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/windowBackground"
+        android:scaleType="fitCenter"
+        android:tint="@color/tintColor"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonFavorite"
+        app:srcCompat="@drawable/share" />
+
+    <ImageButton
+        android:id="@+id/imageButtonFullScreenTranslate"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/windowBackground"
+        android:tint="@color/tintColor"
+        android:scaleType="fitCenter"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonShare"
+        app:srcCompat="@drawable/fullscreen" />
+
+</android.support.constraint.ConstraintLayout>

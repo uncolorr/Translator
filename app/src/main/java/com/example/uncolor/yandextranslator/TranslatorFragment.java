@@ -6,13 +6,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -30,10 +33,14 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class TranslatorFragment extends Fragment {
+
+
+    ArrayList<Translate> translations;
 
     private TextView textViewTranslate;
     private EditText editTextFrom;
@@ -41,9 +48,9 @@ public class TranslatorFragment extends Fragment {
     private ImageButton imageButtonShare;
     private ImageButton imageButtonFullScreenTranslate;
     private ImageButton imageButtonFavorite;
+    Translate translate = new Translate();
     private static final String API_KEY = "trnsl.1.1.20170524T080156Z.3a426a0c4a570ecb.995aa3b1f59e3a476b451b1fd5352f710c9660a0";
     private static final String host = "https://translate.yandex.net/api/v1.5/tr/translate?";
-
 
 
     public static TranslatorFragment newInstance() {
@@ -51,17 +58,14 @@ public class TranslatorFragment extends Fragment {
         return fragment;
     }
 
-    private void changeViewImageButtons(boolean isVisible){
+    private void changeViewImageButtons(boolean isVisible) {
         float alpha;
         imageButtonShare.setEnabled(isVisible);
         imageButtonFullScreenTranslate.setEnabled(isVisible);
         imageButtonFavorite.setEnabled(isVisible);
-        if(!isVisible)
-        {
+        if (!isVisible) {
             alpha = 0.0f;
-        }
-        else
-        {
+        } else {
             alpha = 1.0f;
         }
         imageButtonShare.setAlpha(alpha);
@@ -75,7 +79,7 @@ public class TranslatorFragment extends Fragment {
 
     }
 
-    public void onClickDeleteTextButton(View view){
+    public void onClickDeleteTextButton(View view) {
         editTextFrom.getText().clear();
     }
 
@@ -86,48 +90,79 @@ public class TranslatorFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        translations = new ArrayList<Translate>();
 
-        editTextFrom = (EditText)view.findViewById(R.id.editTextFrom);
+        editTextFrom = (EditText) view.findViewById(R.id.editTextFrom);
         editTextFrom.setHorizontallyScrolling(false);
         editTextFrom.setMaxLines(10000);
-        textViewTranslate = (TextView)view.findViewById(R.id.textViewTranslate);
+        editTextFrom.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+                        || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    translations.add(translate);
+                    FragmentEventListener fragmentEventListener = (FragmentEventListener)getActivity();
+                    fragmentEventListener.setArrayListHistory(translations);
+                }
+                return false;
+            }
+        });
+
+        textViewTranslate = (TextView) view.findViewById(R.id.textViewTranslate);
         textViewTranslate.setMovementMethod(new ScrollingMovementMethod());
-        imageButtonFavorite = (ImageButton)view.findViewById(R.id.imageButtonFavorite);
-        imageButtonFullScreenTranslate = (ImageButton)view.findViewById(R.id.imageButtonFullScreenTranslate);
-        imageButtonShare = (ImageButton)view.findViewById(R.id.imageButtonShare);
+        imageButtonFavorite = (ImageButton) view.findViewById(R.id.imageButtonFavorite);
+        imageButtonFullScreenTranslate = (ImageButton) view.findViewById(R.id.imageButtonFullScreenTranslate);
+        imageButtonShare = (ImageButton) view.findViewById(R.id.imageButtonShare);
         changeViewImageButtons(false);
 
-        imageButtonFullScreenTranslate.setOnClickListener(new View.OnClickListener(){
+
+        imageButtonFavorite.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(),FullScreenTranslation.class);
+                if (!translate.isFavorite()) {
+                    imageButtonFavorite.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.favoriteTintColor));
+                    translate.setFavorite(true);
+                } else {
+                    imageButtonFavorite.setColorFilter(ContextCompat.getColor(view.getContext(), R.color.tintColor));
+                    translate.setFavorite(false);
+                }
+            }
+        });
+
+        imageButtonFullScreenTranslate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), FullScreenTranslation.class);
                 intent.putExtra("text", textViewTranslate.getText().toString());
                 startActivity(intent);
             }
         });
 
-        imageButtonShare.setOnClickListener(new View.OnClickListener(){
+        imageButtonShare.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = textViewTranslate.getText().toString();
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT,"Subject");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent,"Поделиться переводом"));
+                startActivity(Intent.createChooser(sharingIntent, "Поделиться переводом"));
             }
         });
 
 
-        buttonDeleteText = (ImageButton)view.findViewById(R.id.buttonDeleteText);
-        buttonDeleteText.setOnClickListener(new View.OnClickListener(){
+        buttonDeleteText = (ImageButton) view.findViewById(R.id.buttonDeleteText);
+        buttonDeleteText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void  onClick(View view){
+            public void onClick(View view) {
                 editTextFrom.getText().clear();
             }
         });
@@ -142,13 +177,13 @@ public class TranslatorFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                try{
+                try {
                     String lang = "en-ru";
                     String myURL = host + "lang=" + lang + "&key=" + API_KEY + "&text=" + URLEncoder.encode(editTextFrom.getText().toString(), "UTF-8");
 
                     new ProgressTask().execute(myURL);
 
-                }catch (UnsupportedEncodingException e){
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
 
@@ -156,16 +191,15 @@ public class TranslatorFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(editTextFrom.getText().toString().isEmpty()){
+                if (editTextFrom.getText().toString().isEmpty()) {
                     textViewTranslate.setText("");
                     changeViewImageButtons(false);
-
-
                 }
 
             }
         });
     }
+
 
     private class ProgressTask extends AsyncTask<String, Void, String> {
 
@@ -173,10 +207,9 @@ public class TranslatorFragment extends Fragment {
         protected String doInBackground(String... path) {
 
             String content = new String();
-            try{
+            try {
                 content = getContent(path[0]);
-            }
-            catch (IOException ex){
+            } catch (IOException ex) {
                 content = ex.getMessage();
             }
 
@@ -192,19 +225,15 @@ public class TranslatorFragment extends Fragment {
                 xmlPullParserFactory = XmlPullParserFactory.newInstance();
                 XmlPullParser xmlPullParser = xmlPullParserFactory.newPullParser();
                 xmlPullParser.setInput(new StringReader(content));
-
-                Translate translate = new Translate("","","");
                 translate = parseXML(xmlPullParser);
                 translate.setTextFrom(editTextFrom.getText().toString());
                 textViewTranslate.setText(translate.getTextTo());
                 changeViewImageButtons(true);
 
 
-
-            } catch (XmlPullParserException e){
+            } catch (XmlPullParserException e) {
                 e.printStackTrace();
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -214,12 +243,12 @@ public class TranslatorFragment extends Fragment {
         private String getContent(String path) throws IOException {
             BufferedReader reader = null;
             try {
-                URL url=new URL(path);
-                HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
+                URL url = new URL(path);
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setReadTimeout(10000);
                 connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.connect();
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder buf = new StringBuilder();
@@ -227,9 +256,8 @@ public class TranslatorFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     buf.append(line + "\n");
                 }
-                return(buf.toString());
-            }
-            finally {
+                return (buf.toString());
+            } finally {
 
                 if (reader != null) {
                     reader.close();
@@ -242,18 +270,18 @@ public class TranslatorFragment extends Fragment {
 
         Translate translate = null;
         int eventType = xmlPullParser.getEventType();
-        while (eventType != XmlPullParser.END_DOCUMENT){
+        while (eventType != XmlPullParser.END_DOCUMENT) {
             String tagName = new String();
-            switch (eventType){
+            switch (eventType) {
                 case XmlPullParser.START_DOCUMENT:
-                    translate = new Translate("","","");
+                    translate = new Translate();
                     break;
                 case XmlPullParser.START_TAG:
                     tagName = xmlPullParser.getName();
-                    if (tagName.equals("Translation")){
+                    if (tagName.equals("Translation")) {
 
-                        translate.setLang(xmlPullParser.getAttributeValue(null,"lang"));
-                    } else if (translate != null){
+                        translate.setLang(xmlPullParser.getAttributeValue(null, "lang"));
+                    } else if (translate != null) {
 
                         if (tagName.equals("text")) {
                             translate.setTextTo(xmlPullParser.nextText());

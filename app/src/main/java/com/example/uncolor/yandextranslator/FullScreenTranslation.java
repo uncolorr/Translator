@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 public class FullScreenTranslation extends AppCompatActivity {
 
-
     String text = new String();
     TextView textViewTextFullScreen;
     ImageButton imageButtonCloseFullScreen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +26,7 @@ public class FullScreenTranslation extends AppCompatActivity {
         textViewTextFullScreen.setMovementMethod(new ScrollingMovementMethod());
         textViewTextFullScreen.setText(text);
         imageButtonCloseFullScreen = (ImageButton)findViewById(R.id.imageButtonCloseFullScreen);
+
         imageButtonCloseFullScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -23,6 +23,7 @@
             android:elevation="0dp"
             android:textAllCaps="false"
             android:textColor="#ffffff"
+            android:onClick="onClickButtonLanguageFrom"
             android:background="?android:attr/selectableItemBackground"/>
 
         <ImageButton
@@ -43,6 +44,7 @@
             android:layout_marginLeft="8dp"
             android:textSize="20sp"
             android:text="Aнглийский"
+            android:onClick="onClickButtonLanguageTo"
             android:background="?android:attr/selectableItemBackground"
             android:textAllCaps="false"
             android:textColor="#ffffff" />

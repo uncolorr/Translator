@@ -25,7 +25,8 @@
         <activity android:name=".ItemTwoFragment" />
         <activity android:name=".TranslatorFragment" />
         <activity android:name=".HistoryFragment" />
-        <activity android:name=".FullScreenTranslation"></activity>
+        <activity android:name=".FullScreenTranslation" />
+        <activity android:name=".ChooseLanguage"></activity>
     </application>
 
 </manifest>

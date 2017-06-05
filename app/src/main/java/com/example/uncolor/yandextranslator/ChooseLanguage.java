@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,20 +25,14 @@ public class ChooseLanguage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_language);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#696969")));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Выбор языка");
 
-        //arrayListLanguages.add("English");
-       // arrayListLanguages.add("Russian");
-      //  arrayListLanguages.add("Polska");
-
+        arrayListLanguages = getIntent().getExtras().getStringArrayList("languages");
         listView = (ListView)findViewById(R.id.listViewLanguages);
         ArrayAdapter<String> languagesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayListLanguages);
         listView.setAdapter(languagesAdapter);
-        currentLanguage = getIntent().getExtras().getString("lang");
-        String[] array = currentLanguage.split(" ");
-        for(int i = 0; i < array.length; i++)
-        {
-            arrayListLanguages.add(array[i]);
-        }
+
         listView.setOnItemClickListener(new ListView.OnItemClickListener(){
 
             @Override
@@ -54,6 +49,17 @@ public class ChooseLanguage extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

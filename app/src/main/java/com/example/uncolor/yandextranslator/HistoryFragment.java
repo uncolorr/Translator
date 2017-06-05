@@ -14,10 +14,8 @@ import java.util.ArrayList;
 
 public class HistoryFragment extends Fragment {
 
-
     ListView listViewHistory;
     ArrayList<Translate> translations = new ArrayList<Translate>();
-
 
     public static HistoryFragment newInstance() {
         HistoryFragment fragment = new HistoryFragment();
@@ -51,4 +49,8 @@ public class HistoryFragment extends Fragment {
         this.translations = translations;
     }
 
+    public void clearHistory() {
+        translations.clear();
+
+    }
 }

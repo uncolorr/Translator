@@ -16,20 +16,10 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/searchView">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp">
 
     </ListView>
-
-    <SearchView
-        android:layout_width="0dp"
-        android:gravity="center"
-
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        android:id="@+id/searchView" />
 
 
 </android.support.constraint.ConstraintLayout>

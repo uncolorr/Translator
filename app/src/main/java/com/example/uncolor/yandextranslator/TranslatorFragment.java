@@ -51,10 +51,14 @@ public class TranslatorFragment extends Fragment {
     Translate translate = new Translate();
     private static final String API_KEY = "trnsl.1.1.20170524T080156Z.3a426a0c4a570ecb.995aa3b1f59e3a476b451b1fd5352f710c9660a0";
     private static final String host = "https://translate.yandex.net/api/v1.5/tr/translate?";
+    private String langKeyTo = new String();
+    private String langKeyFrom = new String();
+    private boolean isShare = false;
 
 
     public static TranslatorFragment newInstance() {
         TranslatorFragment fragment = new TranslatorFragment();
+        fragment.setArguments(new Bundle());
         return fragment;
     }
 
@@ -76,6 +80,8 @@ public class TranslatorFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        langKeyFrom = getArguments().getString("langKeyFrom");
+        langKeyTo = getArguments().getString("langKeyTo");
 
     }
 
@@ -149,6 +155,7 @@ public class TranslatorFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = textViewTranslate.getText().toString();
@@ -178,7 +185,7 @@ public class TranslatorFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 try {
-                    String lang = "en-ru";
+                    String lang = new String(langKeyFrom + "-" + langKeyTo);
                     String myURL = host + "lang=" + lang + "&key=" + API_KEY + "&text=" + URLEncoder.encode(editTextFrom.getText().toString(), "UTF-8");
 
                     new ProgressTask().execute(myURL);
@@ -256,11 +263,14 @@ public class TranslatorFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     buf.append(line + "\n");
                 }
+
                 return (buf.toString());
             } finally {
 
                 if (reader != null) {
                     reader.close();
+
+
                 }
             }
         }
@@ -295,6 +305,8 @@ public class TranslatorFragment extends Fragment {
         }
         return translate;
     }
+
+
 
 
 }

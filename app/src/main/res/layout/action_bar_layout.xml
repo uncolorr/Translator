@@ -34,6 +34,7 @@
             android:tint="#ffffff"
             android:background="@color/tintColor"
             android:scaleType="fitCenter"
+            android:onClick="onClickImageButtonSwap"
             app:srcCompat="@drawable/swap"/>
 
         <Button
